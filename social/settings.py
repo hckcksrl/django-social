@@ -15,10 +15,10 @@ import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ROOT_DIR = os.path.join(BASE_DIR)
-CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, 'social')
-CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, '.config.json')
-config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
+# ROOT_DIR = os.path.join(BASE_DIR)
+# CONFIG_SECRET_DIR = os.path.join(ROOT_DIR, 'social')
+# CONFIG_SETTINGS_COMMON_FILE = os.path.join(CONFIG_SECRET_DIR, '.config.json')
+# config_secret = json.loads(open(CONFIG_SETTINGS_COMMON_FILE).read())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -29,7 +29,7 @@ SECRET_KEY = 'i1kf_y3i683h&l!0y#dh84aoi8o=@u18ku93&($ms-xg-5d8i9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -41,27 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
+    'socialogin',
+    'rest_framework'
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'SCOPE': ['email'],
-        'METHOD': 'oauth2'
-    }
-}
-
-SOCIAL_AUTH_FACEBOOK_KEY = config_secret['FACEBOOK_API_ID']
-SOCIAL_AUTH_FACEBOOK_SECRET = config_secret['FACEBOOK_API_SECRET']
+# AUTHENTICATION_BACKENDS = (
+#     'allauth.account.auth_backends.AuthenticationBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
