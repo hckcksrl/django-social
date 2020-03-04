@@ -1,5 +1,5 @@
 from rest_framework import serializers
 
 
-class FacebookTokenSerializer(serializers.Serializer):
-    pass
+class CodeSerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)
