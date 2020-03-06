@@ -10,21 +10,21 @@ from socialogin.serializers import CodeSerializer
 
 class FacebookLoginView(APIView):
     def get(self, request: Request):
-        serializer = CodeSerializer(data=request.query_params)
-        if not serializer.is_valid():
+        code = request.GET.get('code', None)
+        if not code:
             raise ValidationErrorException
 
-        token = FaceBookLoginInteractor().execute(**serializer.data)
+        token = FaceBookLoginInteractor().execute(code=code)
 
         return Response(status=status.HTTP_200_OK, data={"token": token})
 
 
 class KakaoLoginView(APIView):
     def get(self, request:Request):
-        serializer = CodeSerializer(data=request.query_params)
-        if not serializer.is_valid():
+        code = request.GET.get('code', None)
+        if not code:
             raise ValidationErrorException
 
-        token = KakaoLoginInteractor().execute(**serializer.data)
+        token = KakaoLoginInteractor().execute(code=code)
 
         return Response(status=status.HTTP_200_OK, data={"token": token})

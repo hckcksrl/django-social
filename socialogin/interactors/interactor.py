@@ -1,6 +1,6 @@
 import requests
 
-from socialogin.helpers import JsonToken, InvalidTokenException, ValidationErrorException, InvalidCodeException
+from socialogin.helpers import JsonToken, InvalidCodeException, InvalidTokenException
 from .social import FaceBook, Kakao
 
 
@@ -21,12 +21,12 @@ class FaceBookLoginInteractor(LoginInteractor):
             },
         ).json()
 
-        error = response.get("error",None)
+        error = response.get("error", None)
 
-        if error is not None :
+        if not error:
             raise InvalidCodeException
 
-        access_token = response['access_token']
+        access_token = response.get('access_token')
 
         response = requests.get(
             url='https://graph.facebook.com/me',
@@ -57,7 +57,7 @@ class KakaoLoginInteractor(LoginInteractor):
 
         error = response.get("error", None)
 
-        if error:
+        if not error:
             raise InvalidCodeException
 
         access_token = response.get('access_token')
