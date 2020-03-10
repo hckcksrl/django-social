@@ -2,11 +2,12 @@ import requests
 
 from socialogin.helpers import JsonToken, InvalidCodeException, InvalidTokenException
 from .social import FaceBook, Kakao
+from socialogin.repositories import UserRepository
 
 
 class LoginInteractor:
     def __init__(self):
-        self.repository = self
+        self.repository = UserRepository()
 
 
 class FaceBookLoginInteractor(LoginInteractor):
@@ -23,7 +24,7 @@ class FaceBookLoginInteractor(LoginInteractor):
 
         error = response.get("error", None)
 
-        if not error:
+        if error:
             raise InvalidCodeException
 
         access_token = response.get('access_token')
@@ -35,6 +36,26 @@ class FaceBookLoginInteractor(LoginInteractor):
                 "fields": "email,name"
             },
         ).json()
+
+        user = self.repository.get_user(id=response.get('id'), social='facebook')
+
+        if user:
+            self.repository.update_user_token(
+                access_token=access_token,
+                id=response.get('id'),
+                email=response.get('email'),
+                social='facebook',
+                username=response.get('name')
+            )
+        else:
+            self.repository.create_user(
+                access_token=access_token,
+                id=response.get('id'),
+                email=response.get('email'),
+                social='facebook',
+                username=response.get('name')
+            )
+
 
         token = JsonToken().encode(
             payload={"id": response['id']}
@@ -57,7 +78,7 @@ class KakaoLoginInteractor(LoginInteractor):
 
         error = response.get("error", None)
 
-        if not error:
+        if error:
             raise InvalidCodeException
 
         access_token = response.get('access_token')
@@ -72,8 +93,27 @@ class KakaoLoginInteractor(LoginInteractor):
             headers=header
         ).json()
 
+        user = self.repository.get_user(id=response.get('id'), social='kakao')
+
+        if user:
+            self.repository.update_user_token(
+                access_token=access_token,
+                id=response.get('id'),
+                email=response.get('kakao_account').get('email'),
+                social='kakao',
+                username=response.get('properties').get('nickname')
+            )
+        else:
+            self.repository.create_user(
+                access_token=access_token,
+                id=response.get('id'),
+                email=response.get('kakao_account').get('email'),
+                social='kakao',
+                username=response.get('properties').get('nickname')
+            )
+
         token = JsonToken().encode(
-            payload={"id": response['id']}
+            payload={"id": response.get('id')}
         )
 
         return token

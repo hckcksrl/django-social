@@ -44,7 +44,7 @@ class UserRepository(Repository):
             id: int,
             social: str
     ):
-        user = User.objects.get(social_id=id, social=social)
+        user = User.objects.filter(social_id=id, social_site=social)
 
         return user
 
